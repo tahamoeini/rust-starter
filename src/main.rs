@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 // The handler function should return an HttpResponse and can use the Responder trait
-fn get_index() -> HttpResponse {
+async fn get_index() -> HttpResponse {
     HttpResponse::Ok()
         .content_type("text/html")
         .body(
