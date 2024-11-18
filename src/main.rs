@@ -1,40 +1,32 @@
-use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
+use actix_web::{web, App, HttpResponse, HttpServer};
 
-fn main() {
-    println!("Guess the number!");
+// The main function needs to be asynchronous and should use the #[actix_web::main] macro
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let server = HttpServer::new(|| {
+        App::new()
+            .route("/", web::get().to(get_index)) // Set up the route
+    });
 
-    let secret_number = rand::thread_rng().gen_range(1..=100);
+    println!("Serving on http://localhost:3000...");
+    server
+        .bind("127.0.0.1:3000")? // Use the ? operator for error handling
+        .run()
+        .await // Await the server to run
+}
 
-    println!("The secret number is: {secret_number}");
-
-    loop {
-        println!("Please input your guess.");
-
-        let mut guess = String::new();
-
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line");
-
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => {
-                println!("Please enter a number!");
-                continue;
-            }
-        };
-
-        println!("You guessed: {guess}");
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            }
-        }
-    }
+// The handler function should return an HttpResponse and can use the Responder trait
+fn get_index() -> HttpResponse {
+    HttpResponse::Ok()
+        .content_type("text/html")
+        .body(
+            r#"
+            <title>GCD Calculator</title>
+            <form action="/gcd" method="post">
+                <input type="text" name="n"/>
+                <input type="text" name="m"/>
+                <button type="submit">Compute GCD</button>
+            </form>
+            "#,
+        )
 }
