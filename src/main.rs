@@ -1,5 +1,5 @@
-mod sublist;
+mod dominoes;
 
 fn main() {
-    sublist::main();
+    dominoes::main();
 }
