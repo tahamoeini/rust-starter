@@ -1,5 +1,5 @@
-mod anagrams;
+mod space;
 
 fn main() {
-    anagrams::main();
+    space::main();
 }
