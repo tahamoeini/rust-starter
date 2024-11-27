@@ -1,5 +1,5 @@
-mod mine;
+mod luhn;
 
 fn main() {
-    mine::main();
+    luhn::main();
 }
