@@ -1,5 +1,5 @@
-mod dominoes;
+mod mine;
 
 fn main() {
-    dominoes::main();
+    mine::main();
 }
