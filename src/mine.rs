@@ -1,32 +1,19 @@
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
-    let mut result = Vec::new();
-    for (i, row) in minefield.iter().enumerate() {
-        let mut row_result = String::new();
-        for (j, cell) in row.chars().enumerate() {
+    let offsets = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)];
+    minefield.iter().enumerate().map(|(i, row)| {
+        row.chars().enumerate().map(|(j, cell)| {
             if cell == '*' {
-                row_result.push('*');
+                '*'.to_string()
             } else {
-                let mut count = 0;
-                let offsets = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)];
-                for (dx, dy) in offsets.iter() {
+                let count = offsets.iter().filter(|&&(dx, dy)| {
                     let new_i = i as i32 + dx;
                     let new_j = j as i32 + dy;
-                    if new_i >= 0
-                        && new_i < minefield.len() as i32
-                        && new_j >= 0
-                        && (new_j as usize) < minefield[new_i as usize].len()
-                    {
-                        if minefield[new_i as usize].chars().nth(new_j as usize).unwrap() == '*' {
-                            count += 1;
-                        }
-                    }
-                }
-                row_result.push_str(&count.to_string());
+                    new_i >= 0 && new_i < minefield.len() as i32 && new_j >= 0 && (new_j as usize) < minefield[new_i as usize].len() && minefield[new_i as usize].chars().nth(new_j as usize) == Some('*')
+                }).count();
+                if count > 0 { count.to_string() } else { " ".to_string() }
             }
-        }
-        result.push(row_result);
-    }
-    result
+        }).collect()
+    }).collect()
 }
 
 pub fn main() {
